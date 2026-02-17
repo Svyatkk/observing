@@ -9,14 +9,12 @@ export default async function ProfilePage({ params }: Props) {
 
     const { username } = await params;
 
-
-
-
     const userTweet = TWEETS.find(t => t.author === username);
 
     if (!userTweet) {
         return <div>Користувача @{username} не знайдено</div>;
     }
+
 
 
 

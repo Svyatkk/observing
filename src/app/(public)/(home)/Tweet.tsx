@@ -10,17 +10,16 @@ export default function Tweet({ tweet }: Props) {
 
     return (
         <>
-            <Link
-                href={`/user/${tweet.author}`}
-                className={styles.container}
-            >
-                <p className="font-bold">{tweet.author}</p>
-                <p>{tweet.text}</p>
-            </Link>
+            <div className="container=tweets">
 
-
-
-
+                <Link
+                    href={`/user/${tweet.author}`}
+                    className={styles.container}
+                >
+                    <p className="font-bold">{tweet.author}</p>
+                    <p>{tweet.text}</p>
+                </Link>
+            </div>
 
         </>
     )
