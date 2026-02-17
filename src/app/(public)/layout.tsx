@@ -5,13 +5,12 @@ export default function Layout({ children }: PropsWithChildren<unknown>) {
     return (
         <>
 
+
+
             <Header></Header>
             <div style={{ padding: "var(--rem-for-all)" }}>
                 {children}
             </div>
         </>
-
-
-
     )
 }

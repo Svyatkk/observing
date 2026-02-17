@@ -11,7 +11,7 @@ export const TWEETS: ITweet[] = [
     },
     {
         author: 'nextjs_team',
-        text: "Server Components are the future of web development! 🚀"
+        text: "Server Components are the future of web development! 🚀 something greatful will happen if i will continue this way"
     },
     {
         author: 'cat_lover_99',

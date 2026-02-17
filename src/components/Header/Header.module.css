@@ -13,8 +13,10 @@
 
 .imgLogo {
     border-radius: 50%;
+}
 
-
+.buttons p.active {
+    color: white;
 }
 
 .buttons {
@@ -26,4 +28,6 @@
     align-items: center;
     font-size: 0.7em;
     color: gray;
+
+
 }
