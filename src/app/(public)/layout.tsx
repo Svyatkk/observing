@@ -6,10 +6,11 @@ export default function Layout({ children }: PropsWithChildren<unknown>) {
         <>
 
             <Header></Header>
-            <div>
+            <div style={{ padding: "var(--rem-for-all)" }}>
                 {children}
             </div>
         </>
+
 
 
     )
