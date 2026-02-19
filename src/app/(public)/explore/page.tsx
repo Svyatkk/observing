@@ -1,10 +1,17 @@
 
+import { Suspense } from "react"
+import Explore from "./Explore"
+export default function ExplorePage() {
 
-export default function Home() {
     return (
         <>
-            <h1>Explore</h1>
 
+            <Suspense>
+
+
+                <Explore></Explore>
+
+            </Suspense>
         </>
     )
 }

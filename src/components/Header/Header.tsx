@@ -28,7 +28,6 @@ export function Header() {
                 </Link>
 
 
-
                 <div className={styles.buttons}>
                     <Link href={PAGES.EXPLORE}><p className={pathName === PAGES.EXPLORE ? styles.active : ''}>Explore</p></Link>
                     <Link href={PAGES.PROFILE_FAKE}><p className={pathName === PAGES.PROFILE_FAKE ? styles.active : ''}>Profile</p></Link>

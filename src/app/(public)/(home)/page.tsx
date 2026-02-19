@@ -16,6 +16,7 @@ export default function Home() {
                 {
                     TWEETS.map((t, index: number) => {
                         return <Tweet key={index} tweet={{
+                            id: t.id,
                             author: t.author,
                             text: t.text
                         }}></Tweet>

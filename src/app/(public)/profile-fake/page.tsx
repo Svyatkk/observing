@@ -1,13 +1,12 @@
 
+import type { Metadata } from "next"
+import ProfileFake from "./ProfileFake"
 
-export default function Home() {
-    return (
-        <>
+export const metadata: Metadata = {
+    title: 'ProfileFake'
+}
+export default function ProfileFakePage() {
+    return <ProfileFake></ProfileFake>
 
 
-            <div>
-                <h1>Profile fake</h1>
-            </div>
-        </>
-    )
 }
