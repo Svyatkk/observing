@@ -1,6 +1,7 @@
 'use client'
 
 import { useParams } from "next/navigation"
+import CreateTweet from "../../(home)/CreateTweet"
 
 export default function Profile() {
 
@@ -11,7 +12,10 @@ export default function Profile() {
         <>
 
 
+            <CreateTweet></CreateTweet>
             <div>Profile {params.username}</div>
+
+
         </>
     )
 }

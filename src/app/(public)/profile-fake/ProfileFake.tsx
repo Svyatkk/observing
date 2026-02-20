@@ -15,7 +15,6 @@ export default function ProfileFake() {
             <div>
                 <h1>Profile fake</h1>
 
-
                 <button onClick={() => {
                     router.push(PAGES.HOME)
                 }}>Go to home</button>

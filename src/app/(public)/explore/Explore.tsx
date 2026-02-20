@@ -14,6 +14,8 @@ export default function Explore() {
             <h1>{tag && `explore by ${tag}`}</h1>
 
 
+
+
             <div>something</div>
         </>
     )

@@ -10,9 +10,9 @@ export function Header() {
 
     const pathName = usePathname()
 
+
     console.log(pathName)
     return (
-
         <>
             <nav className={styles.nav}>
                 <Link
@@ -28,10 +28,13 @@ export function Header() {
                 </Link>
 
 
+
                 <div className={styles.buttons}>
                     <Link href={PAGES.EXPLORE}><p className={pathName === PAGES.EXPLORE ? styles.active : ''}>Explore</p></Link>
                     <Link href={PAGES.PROFILE_FAKE}><p className={pathName === PAGES.PROFILE_FAKE ? styles.active : ''}>Profile</p></Link>
                     <Link href={PAGES.HOME}><p className={pathName === PAGES.HOME ? styles.active : ''}>Home</p ></Link>
+
+
 
                 </div>
             </nav>

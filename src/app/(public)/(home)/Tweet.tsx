@@ -21,9 +21,6 @@ export default function Tweet({ tweet }: Props) {
 
     return (
         <>
-
-
-
             <div onClick={() => {
                 router.push(PAGES.TWEETDETAILS(tweet.id))
             }} className={styles.container}>

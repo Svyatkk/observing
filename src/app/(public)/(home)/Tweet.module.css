@@ -52,3 +52,83 @@
     width: 100%;
     transition: 0.2s;
 }
+
+.input {
+    width: 100%;
+    height: 50px;
+    border: 0.5px solid gray;
+    background-color: transparent;
+    border-radius: 15px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.label {
+    border: 0.5px solid gray;
+    display: flex;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    transition: 1s;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.label.active .blockPost {
+    display: flex;
+    transition: 1s;
+
+
+}
+
+.input:focus {
+    outline: none;
+}
+
+.blockPost {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+    align-items: center;
+}
+
+.label.active .blockPost {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+
+}
+
+.label.active {
+    gap: 10px;
+}
+
+.tweetButton {
+    display: flex;
+    width: auto;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+.privacyText {
+    opacity: 0;
+    position: absolute;
+    left: 200px;
+    transition: 0.5s;
+}
+
+
+.privacyText.activeText {
+    transition: 0.9s;
+    opacity: 1;
+    transform: translateX(-130px);
+}
