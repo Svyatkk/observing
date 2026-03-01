@@ -6,6 +6,7 @@ type Props = {
     params: Promise<{ username: string }>
 }
 
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { username } = await params
 

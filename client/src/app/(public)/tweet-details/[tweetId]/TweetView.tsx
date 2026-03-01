@@ -9,7 +9,6 @@ export default function TweetView({ tweet }: { tweet: ITweet }) {
     return (
         <>
 
-
             <div>
 
                 <h1>Tweet by {tweet.author}</h1>

@@ -2,6 +2,7 @@ import styles from './Tweet.module.css'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { TWEETS } from '@/shared/data/tweets.data'
+import { title } from 'process'
 
 
 export default function CreateTweet() {
@@ -12,6 +13,25 @@ export default function CreateTweet() {
 
     const params = useParams<{ username: string }>()
 
+
+    const handlePost = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/user/react_fan`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': `application/json`
+                },
+                body: JSON.stringify({ title: inputText })
+            })
+            if (response.ok) {
+                const data = await response.json()
+                console.log("Успішно зареєстровано:", data);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
 
@@ -41,18 +61,7 @@ export default function CreateTweet() {
                     <button
 
                         onClick={() => {
-                            if (inputText.trim() === '') return
-
-                            const newTweet = {
-                                id: TWEETS.length + 1,
-                                author: params.username,
-                                text: inputText
-                            }
-                            TWEETS.unshift(newTweet)
-                            setInputText('')
-                            setActive(false)
-
-
+                            handlePost()
                         }}
                         className={styles.tweetButton}>Post</button>
                     <p

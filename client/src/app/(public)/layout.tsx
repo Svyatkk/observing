@@ -4,9 +4,6 @@ import { Header } from "@/components/Header/Header";
 export default function Layout({ children }: PropsWithChildren<unknown>) {
     return (
         <>
-
-
-
             <Header></Header>
             <div style={{ padding: "var(--rem-for-all)" }}>
                 {children}
