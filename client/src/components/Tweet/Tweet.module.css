@@ -1,0 +1,41 @@
+.block {
+    border: 1px solid gray;
+    min-height: 200px;
+    width: 100%;
+    max-width: 300px;
+    padding: 15px 10px 15px 10px;
+
+    transition: 0.2s;
+
+}
+
+.blockHeader {
+    display: flex;
+}
+
+.header {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.blockHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.img {
+    border-radius: 50%;
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+.name {
+    margin-bottom: 5px;
+}
+
+.block:hover {
+    background-color: rgb(19, 19, 19);
+    cursor: pointer;
+    transition: 0.2s;
+}

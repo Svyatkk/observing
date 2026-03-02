@@ -1,13 +1,16 @@
 import type { PropsWithChildren } from "react";
 import { Header } from "@/components/Header/Header";
-
+import styles from './layout.module.css'
 export default function Layout({ children }: PropsWithChildren<unknown>) {
     return (
         <>
             <Header></Header>
-            <div style={{ padding: "var(--rem-for-all)" }}>
+            <div className={styles.container}>
                 {children}
-            </div>
+
+
+
+            </div >
         </>
     )
 }
