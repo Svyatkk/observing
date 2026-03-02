@@ -1,7 +1,10 @@
-export interface ITweet {
-    id: number,
-    text: string,
-    author: string
+export type Post = {
+    id: number
+    title: string
+    user: {
+        id: number
+        name: string
+    },
 
 
-}       
+}
