@@ -7,7 +7,7 @@ import Link from "next/link"
 import { PAGES } from "@/app/config/pages.config"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-
+import { useState } from "react"
 
 type Props = {
     tweet: ITweet
@@ -17,8 +17,26 @@ type Props = {
 export default function Tweet({ tweet }: Props) {
 
     const router = useRouter()
-    
 
+
+    const [show, setShow] = useState<unknown>()
+
+
+
+    const handleshow = async () => {
+        try {
+            const result = await fetch(`http://localhost:3001/`, {
+                method: "GET"
+            })
+            if (result.ok) {
+                setShow(result)
+                console.log('Успішно отримано' + result)
+            }
+        } catch (error) {
+            console.log(error)
+
+        }
+    }
     return (
         <>
             <div onClick={() => {

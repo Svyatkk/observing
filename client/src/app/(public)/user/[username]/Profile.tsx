@@ -22,9 +22,6 @@ export default function Profile() {
     return (
         <>
 
-
-
-
             <CreateTweet></CreateTweet>
             <div>Profile {params.username}</div>
 

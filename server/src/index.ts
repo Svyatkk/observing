@@ -3,6 +3,7 @@ import { serve } from "@hono/node-server";
 import { PrismaClient } from "./generated/prisma/client";
 import withPrisma from "./lib/prisma";
 import { cors } from 'hono/cors'
+import { data } from "react-router-dom";
 
 
 
@@ -44,6 +45,15 @@ app.post('/users', withPrisma, async c => {
 })
 
 
+app.get('/posts', withPrisma, async c => {
+    const prisma = c.get('prisma')
+
+    const posts = await prisma.post.findMany()
+    return c.json(posts)
+
+})
+
+
 app.post('/user/:name', withPrisma, async c => {
     const prisma = c.get('prisma')
     const name = c.req.param('name')
@@ -52,6 +62,7 @@ app.post('/user/:name', withPrisma, async c => {
     const found = await prisma.user.findFirst({
         where: { name: name }
     })
+
 
     let currentUserId: number
     if (!found) {
