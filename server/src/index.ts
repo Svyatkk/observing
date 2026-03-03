@@ -22,9 +22,6 @@ app.use('/*', cors());
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')
 
-
-
-
     const posts = await prisma.post.findMany({
         include: {
             user: true,
@@ -36,10 +33,29 @@ app.get('/posts', withPrisma, async c => {
     })
     return c.json(posts)
 
+
+
 })
 
+app.get('/profile/:id', withPrisma, async (c) => {
+    const rawId = c.req.param('id');
+    console.log("Отримано запит для ID:", rawId);
 
+    const id = Number(rawId);
+    if (isNaN(id)) return c.json({ error: "Invalid ID format" }, 400);
 
+    const prisma = c.get("prisma");
+    const user = await prisma.user.findUnique({
+        where: { id: id },
+    });
+
+    if (!user) {
+        console.log("Користувача не знайдено в БД");
+        return c.json(null, 404);
+    }
+
+    return c.json(user);
+});
 
 serve(
     {

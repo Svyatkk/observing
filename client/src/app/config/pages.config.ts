@@ -12,7 +12,9 @@ export const PAGES = {
 
 
     TWEETDETAILS: (id: number) => `/tweet-details/${id}`,
-    PROFILE: (username: string) => `/user/${username}`,
+    PROFILE: (id: number) => `/profile/${id}`,
+
+
 
 
 

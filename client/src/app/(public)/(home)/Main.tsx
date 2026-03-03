@@ -8,7 +8,6 @@ export default function Main() {
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
 
-
     useEffect(() => {
         fetch("http://localhost:3001/posts")
             .then(res => res.json())

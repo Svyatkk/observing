@@ -3,36 +3,34 @@
 import type { Post } from "@/shared/types/tweet.interface"
 import styles from './Tweet.module.css'
 import Image from "next/image"
+import { PAGES } from '@/app/config/pages.config'
+import Link from "next/link" // Імпортуємо Link
+
 type Props = {
     object: Post
 }
 
+
 export default function Tweet({ object }: Props) {
     return (
-        <>
-            <div className={styles.block}>
-                <div className={styles.blockHeader}>
-                    <Image
-                        alt="something"
-                        src={""}
-                        height={40}
-                        width={40}
-                        className={styles.img}
-                    ></Image>
-                    <div className={styles.textHeader}>
-                        <div className={styles.name}>{object.user.name}</div>
-                        <div className={styles.header}>
-                            {object.title}
-                        </div>
+        <Link href={PAGES.PROFILE(object.user.id)} className={styles.block}>
+            <div className={styles.blockHeader}>
+                <Image
+                    alt={object.user.name}
+                    src={""}
+                    height={40}
+                    width={40}
+                    className={styles.img}
+                />
+                <div className={styles.textHeader}>
+                    <div className={styles.name}>{object.user.name}</div>
+                    <div className={styles.header}>
+                        {object.title}
                     </div>
                 </div>
-                <div className={styles.blockContent}>
-
-
-                </div>
             </div>
-
-        </>
+            <div className={styles.blockContent}>
+            </div>
+        </Link>
     )
 }
-
