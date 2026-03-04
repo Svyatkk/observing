@@ -18,6 +18,69 @@ const app = new Hono<ContextwithPrisma>()
 
 app.use('/*', cors());
 
+app.post('/register', withPrisma, async (c) => {
+    const prisma = c.get("prisma")
+
+    try {
+        const { userName, name, password } = await c.req.json()
+
+        if (!userName || !name || !password) {
+            return c.json({ error: "Всі поля є обов'язковими" }, 400)
+        }
+
+
+        const newUser = await prisma.user.create({
+            data: {
+                name: name,
+                userName: userName,
+                password: password,
+
+
+            }
+        })
+
+
+
+
+        return c.json(newUser, 201)
+
+    } catch (error) {
+        console.error("Помилка бекенду:", error)
+
+
+
+        return c.json({ error: "Не вдалося зареєструвати користувача" }, 500)
+    }
+})
+
+app.get('login', withPrisma, async c => {
+    const prisma = c.get('prisma')
+
+    try {
+        const { username, password } = await c.req.json()
+
+        const user = await prisma.user.findUnique({
+            where: {
+                userName: username,
+                password: password
+            }
+
+        })
+        if (!user) {
+            return c.json({ error: "Невірний логін або пароль" }, 401)
+        }
+
+
+        return c.json(username)
+
+
+
+    } catch (error) {
+        console.log(error)
+        return c.json({ error: "Помилка сервера" }, 500)
+    }
+
+})
 
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')

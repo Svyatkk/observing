@@ -10,7 +10,6 @@ export const PAGES = {
     LOGIN: '/login',
     REGISTER: '/register',
 
-
     TWEETDETAILS: (id: number) => `/tweet-details/${id}`,
     PROFILE: (id: number) => `/profile/${id}`,
 

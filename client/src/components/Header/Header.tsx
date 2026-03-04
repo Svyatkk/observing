@@ -1,6 +1,6 @@
 'use client'
 
-import { PAGES } from '@/app/config/pages.config'
+import { PAGES } from '@/config/pages.config'
 import styles from './Header.module.css'
 import Image from 'next/image'
 import Link from 'next/link'

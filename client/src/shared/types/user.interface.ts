@@ -1,4 +1,8 @@
 export type IUser = {
-    name: string
+    name: string,
+    userName: string,
+    password: string
+
+
 
 }       
