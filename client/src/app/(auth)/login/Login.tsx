@@ -1,75 +1,62 @@
-'use client'
+// client/src/app/(auth)/login/page.tsx
+import { redirect } from 'next/navigation';
+import { createSession } from '@/lib/session';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+// Ця функція виконається НА СЕРВЕРІ Next.js
+async function loginAction(formData: FormData) {
+    'use server';
+
+    const userName = formData.get('userName');
+    const password = formData.get('password');
+
+
+    const res = await fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userName, password }),
+    });
+
+
+
+
+    if (!res.ok) {
+
+
+        console.log("Помилка логіну");
+        return;
+    }
+
+    const data = await res.json();
+
+    if (data.token) {
+        await createSession(data.token);
+        redirect('/');
+
+
+    }
+}
 
 
 export default function Login() {
-
-    const [password, setPast] = useState<string>('')
-    const [userName, setUsername] = useState<string>()
-
-
-    const handleLogin = async () => {
-
-        try {
-            const response = await fetch(`http://localhost:3001/login`, {
-                method: "POSt",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    userName: userName,
-                    password: password
-                })
-
-            })
-
-
-            if (response.ok) {
-                const data = (await response).json()
-                console.log('Успішний вхід')
-
-            }
-            else {
-                console.log('Помилка вхоу')
-
-            }
-        }
-        catch (error) {
-            console.log(error)
-
-
-        }
-
-    }
-
     return (
-        <>
-
-            <div>
-                Login
-            </div>
-
-
-            <div>
-                eneter the username
-            </div>
-
-            <label htmlFor=""><input onChange={(e) => {
-                setUsername(e.target.value)
-            }} type="text" /></label>
-            <div>
-                enter the password
-            </div>
-
-
-            <label htmlFor=""><input onChange={(e) => {
-                setPast(e.target.value)
-            }} type="text" /></label>
-
-            <button onClick={handleLogin}>Login</button>
-
-        </>
-    )
+        <div>
+            <h1>Логін</h1>
+            {/* Форма викликає Server Action */}
+            <form action={loginAction} style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '10px' }}>
+                <input
+                    type="text"
+                    name="userName" // ВАЖЛИВО: name має співпадати з formData.get()
+                    placeholder="Логін"
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Пароль"
+                    required
+                />
+                <button type="submit">Увійти</button>
+            </form>
+        </div>
+    );
 }

@@ -4,7 +4,12 @@ import { PrismaClient } from "./generated/prisma/client";
 import withPrisma from "./lib/prisma";
 import { cors } from 'hono/cors'
 import { data } from "react-router-dom";
+import * as jwt from 'jsonwebtoken';
 
+
+
+
+const JWT_SECRET = 'tviy_duzhe_sekretniy_kluch';
 
 
 
@@ -13,6 +18,8 @@ type ContextwithPrisma = {
         prisma: PrismaClient
     }
 }
+
+
 
 const app = new Hono<ContextwithPrisma>()
 
@@ -28,7 +35,6 @@ app.post('/register', withPrisma, async (c) => {
             return c.json({ error: "Всі поля є обов'язковими" }, 400)
         }
 
-
         const newUser = await prisma.user.create({
             data: {
                 name: name,
@@ -38,49 +44,49 @@ app.post('/register', withPrisma, async (c) => {
 
             }
         })
-
-
-
-
         return c.json(newUser, 201)
 
     } catch (error) {
         console.error("Помилка бекенду:", error)
 
-
-
         return c.json({ error: "Не вдалося зареєструвати користувача" }, 500)
     }
 })
 
-app.get('login', withPrisma, async c => {
+
+
+app.post('/login', withPrisma, async c => {
     const prisma = c.get('prisma')
-
     try {
-        const { username, password } = await c.req.json()
-
+        const { userName, password } = await c.req.json()
+        if (!userName || !password) {
+            return c.json({ error: "Введіть логін та пароль" }, 400)
+        }
         const user = await prisma.user.findUnique({
-            where: {
-                userName: username,
-                password: password
-            }
-
+            where: { userName: userName }
         })
-        if (!user) {
+        if (!user || user.password !== password) { // Згодом тут додамо bcrypt
             return c.json({ error: "Невірний логін або пароль" }, 401)
         }
-
-
-        return c.json(username)
-
-
+        // 🟢 МАГІЯ ТУТ: Створюємо JWT токен
+        // Ми "зашиваємо" в токен ID юзера та його ім'я
+        const token = jwt.sign(
+            {
+                id: user.id,
+                userName: user.userName
+            },
+            JWT_SECRET,
+            { expiresIn: '7d' } // Токен діє 7 днів
+        );
+        // Повертаємо токен на Next.js
+        return c.json({ message: "Успіх", token: token })
 
     } catch (error) {
-        console.log(error)
         return c.json({ error: "Помилка сервера" }, 500)
     }
-
 })
+
+
 
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')
@@ -96,8 +102,31 @@ app.get('/posts', withPrisma, async c => {
     })
     return c.json(posts)
 
+})
+
+app.get('/:userName', withPrisma, async (c) => {
+
+    const prisma = c.get('prisma')
+
+    const username = c.req.param('userName')
+
+    try {
+
+        const user = await prisma.user.findUnique({
+            where: {
+                userName: username
+            }
+        })
+        if (!user) {
+            console.log('Нема такого юзера')
+        }
 
 
+        return c.json(user)
+
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.get('/profile/:id', withPrisma, async (c) => {
