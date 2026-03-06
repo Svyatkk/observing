@@ -55,6 +55,9 @@ app.post('/register', withPrisma, async (c) => {
 
 
 
+
+
+
 app.post('/login', withPrisma, async c => {
     const prisma = c.get('prisma')
     try {
@@ -68,7 +71,7 @@ app.post('/login', withPrisma, async c => {
         if (!user || user.password !== password) { // Згодом тут додамо bcrypt
             return c.json({ error: "Невірний логін або пароль" }, 401)
         }
-        // 🟢 МАГІЯ ТУТ: Створюємо JWT токен
+        // МАГІЯ ТУТ: Створюємо JWT токен
         // Ми "зашиваємо" в токен ID юзера та його ім'я
         const token = jwt.sign(
             {
