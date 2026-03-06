@@ -53,8 +53,45 @@ app.post('/register', withPrisma, async (c) => {
     }
 })
 
+app.post('/create/:userName', withPrisma, async c => {
+    const prisma = c.get("prisma")
+    const body = await c.req.json()
+    const user = c.req.param('userName')
 
 
+
+    try {
+        const { text } = body
+
+        const currentUser = await prisma.user.findUnique({
+            where: {
+                userName: user
+            }
+        })
+        if (!currentUser) {
+            return c.json({ error: "Користувача не знайдено" }, 404);
+        }
+        const tweet = await prisma.post.create({
+            data: {
+                title: text,
+                published: true,
+                userid: currentUser?.id,
+            }
+        })
+
+
+        return c.json(tweet)
+
+
+    } catch (error) {
+        console.log(error)
+
+        return c.json({ message: 'шось пішло не так' })
+
+
+    }
+
+})
 
 
 
