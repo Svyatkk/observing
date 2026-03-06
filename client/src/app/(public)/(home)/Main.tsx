@@ -4,11 +4,17 @@ import { useEffect, useState } from "react"
 import type { Post } from "@/shared/types/tweet.interface"
 import Tweet from "@/components/Tweet/Tweet"
 import styles from './main.module.css'
+import type { JWTPayload } from "jose"
 
-export default function Main() {
+type Props = {
+    user: JWTPayload | null
+
+}
+
+
+export default function Main({ user }: Props) {
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
-
 
 
     useEffect(() => {
@@ -20,6 +26,8 @@ export default function Main() {
                 setPosts(data)
                 setLoading(false)
 
+
+
             })
             .catch(err => console.error(err))
     }, [])
@@ -28,6 +36,12 @@ export default function Main() {
 
     return (
         <>
+
+            <div>
+                {user ? String(user.userName) : "Гість"}
+
+
+            </div>
 
 
             <main className={styles.main}>

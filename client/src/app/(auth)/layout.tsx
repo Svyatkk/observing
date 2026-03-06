@@ -9,6 +9,8 @@ type Props = {
 export default function LayoutAuth({ children }: Props) {
     return (
         <>
+
+
             {children}
 
 

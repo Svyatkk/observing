@@ -3,12 +3,16 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
+
+
 const secretKey = process.env.JWT_SECRET || 'tviy_duzhe_sekretniy_kluch';
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function createSession(token: string) {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const cookieStore = await cookies();
+
+
 
     cookieStore.set('session', token, {
         httpOnly: true,
@@ -18,6 +22,7 @@ export async function createSession(token: string) {
         path: '/',
     });
 }
+
 
 export async function deleteSession() {
     const cookieStore = await cookies();

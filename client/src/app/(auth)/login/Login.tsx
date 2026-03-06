@@ -1,8 +1,7 @@
-// client/src/app/(auth)/login/page.tsx
+
 import { redirect } from 'next/navigation';
 import { createSession } from '@/lib/session';
 
-// Ця функція виконається НА СЕРВЕРІ Next.js
 async function loginAction(formData: FormData) {
     'use server';
 
@@ -17,11 +16,7 @@ async function loginAction(formData: FormData) {
     });
 
 
-
-
     if (!res.ok) {
-
-
         console.log("Помилка логіну");
         return;
     }
@@ -30,7 +25,7 @@ async function loginAction(formData: FormData) {
 
     if (data.token) {
         await createSession(data.token);
-        redirect('/');
+        return redirect('/');
 
 
     }
@@ -38,17 +33,22 @@ async function loginAction(formData: FormData) {
 
 
 export default function Login() {
+
+
+
     return (
         <div>
             <h1>Логін</h1>
-            {/* Форма викликає Server Action */}
+
             <form action={loginAction} style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '10px' }}>
                 <input
                     type="text"
-                    name="userName" // ВАЖЛИВО: name має співпадати з formData.get()
+                    name="userName"
+
                     placeholder="Логін"
                     required
                 />
+
                 <input
                     type="password"
                     name="password"
@@ -57,6 +57,8 @@ export default function Login() {
                 />
                 <button type="submit">Увійти</button>
             </form>
+
+
         </div>
     );
 }

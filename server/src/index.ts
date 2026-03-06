@@ -53,12 +53,12 @@ app.post('/register', withPrisma, async (c) => {
     }
 })
 
+
+
 app.post('/create/:userName', withPrisma, async c => {
     const prisma = c.get("prisma")
     const body = await c.req.json()
     const user = c.req.param('userName')
-
-
 
     try {
         const { text } = body
@@ -76,6 +76,7 @@ app.post('/create/:userName', withPrisma, async c => {
                 title: text,
                 published: true,
                 userid: currentUser?.id,
+
             }
         })
 
@@ -128,6 +129,7 @@ app.post('/login', withPrisma, async c => {
 
 
 
+
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')
 
@@ -140,6 +142,9 @@ app.get('/posts', withPrisma, async c => {
             id: 'desc'
         },
     })
+
+
+
     return c.json(posts)
 
 })

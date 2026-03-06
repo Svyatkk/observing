@@ -25,7 +25,8 @@ export default function Profile() {
                 console.error("Fetch error:", err)
                 setIsLoading(false)
             })
-    }, [id]) // Додаємо id сюди!
+    }, [id])
+
 
     if (isLoading) return <div>Завантаження...</div>
     if (!user) return <div>Користувача не знайдено</div>

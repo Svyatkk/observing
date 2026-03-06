@@ -11,6 +11,9 @@ export default function Register() {
 
     const route = useRouter()
 
+
+
+
     async function register() {
         try {
             const response = await fetch(`http://localhost:3001/register`, {
@@ -24,6 +27,8 @@ export default function Register() {
                     password: password
                 })
             })
+
+
 
             if (response.ok) {
                 const data = await response.json()

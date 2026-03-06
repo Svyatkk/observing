@@ -4,7 +4,9 @@ import type { Post } from "@/shared/types/tweet.interface"
 import styles from './Tweet.module.css'
 import Image from "next/image"
 import { PAGES } from '@/config/pages.config'
-import Link from "next/link" // Імпортуємо Link
+import Link from "next/link"
+
+
 
 type Props = {
     object: Post
