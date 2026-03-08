@@ -12,7 +12,6 @@ export default function Profile() {
 
     const [isLoading, setIsLoading] = useState(true)
 
-
     useEffect(() => {
         if (!id) return
 
@@ -31,9 +30,6 @@ export default function Profile() {
                 setIsLoading(false)
             })
     }, [id])
-
-
-
 
     if (isLoading) return <div>Завантаження...</div>
     if (!user) return <div>Користувача не знайдено</div>

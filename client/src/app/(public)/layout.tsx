@@ -6,10 +6,8 @@ import { getUserSession } from "@/lib/session";
 import type { JWTPayload } from "jose";
 export default async function Layout({ children }: PropsWithChildren<unknown>) {
 
-
     const session = await getUserSession()
     const userName = session?.userName as string || "";
-
 
 
     return (
@@ -22,8 +20,6 @@ export default async function Layout({ children }: PropsWithChildren<unknown>) {
                 </div>
                 <div className={styles.panel}>
                     <CreateTweet userName={userName}></CreateTweet>
-
-
                     {children}
 
 

@@ -11,7 +11,6 @@ import { useState } from "react"
 type Props = {
     object: Post,
     userInSession: JWTPayload | null
-
 }
 
 

@@ -113,9 +113,16 @@ app.get('/tweet-details/:id', withPrisma, async c => {
             where: {
                 id: id
             },
+
             include: {
-                comments: true,
-                user: true
+                user: true,
+                comments: {
+                    include: {
+                        user: true
+                    }
+                }
+
+
             }
         })
         return c.json(tweet)

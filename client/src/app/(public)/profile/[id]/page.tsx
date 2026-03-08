@@ -3,7 +3,6 @@ export default function page() {
     return (
         <>
 
-
             <Profile></Profile>
         </>
     )

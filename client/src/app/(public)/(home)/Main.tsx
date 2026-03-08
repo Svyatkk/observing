@@ -19,7 +19,6 @@ export default function Main({ user }: Props) {
     useEffect(() => {
         const saveduser = localStorage.getItem('currentuser')
 
-
         fetch("http://localhost:3001/posts")
             .then(res => res.json())
             .then(data => {
