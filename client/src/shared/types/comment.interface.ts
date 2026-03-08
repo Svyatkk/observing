@@ -1,10 +1,11 @@
-
-
-
 export type IComment = {
+    id: number,
     name: string,
     data: Date,
-    title: string,
+    content: string,
 
 }
+
+
+
 

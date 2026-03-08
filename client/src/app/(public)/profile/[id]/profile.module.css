@@ -1,1 +1,12 @@
-.profile {}
+.profile {
+    border: 1px solid white;
+    margin: 20px;
+}
+
+.comments {
+    height: 100px;
+    border: 1px solid red;
+    width: 100%;
+
+
+}

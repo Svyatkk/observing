@@ -259,9 +259,14 @@ app.get('/profile/:id', withPrisma, async (c) => {
     if (isNaN(id)) return c.json({ error: "Invalid ID format" }, 400);
 
     const prisma = c.get("prisma");
+
     const user = await prisma.user.findUnique({
         where: { id: id },
+        include: {
+            comments: true
+        }
     });
+
 
     if (!user) {
         console.log("Користувача не знайдено в БД");
