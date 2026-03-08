@@ -101,33 +101,32 @@ app.get('/users', withPrisma, async c => {
 })
 
 
-/*
-app.get('/tweet/:id', withPrisma, async c => {
+
+app.get('/tweet-details/:id', withPrisma, async c => {
     const prisma = c.get("prisma")
 
     const id = Number(c.req.param('id'))
 
 
     try {
-        const commentForPost = await prisma.comment.findUnique({
-            where: {
-                postId: id,
-
-            }
-        })
         const tweet = await prisma.post.findUnique({
             where: {
                 id: id
             },
             include: {
-                comments: commentForPost
+                comments: true,
+                user: true
             }
         })
+        return c.json(tweet)
     } catch (error) {
         console.error(error)
+        return c.json({ error: "Помилка сервера" }, 500);
+
+
     }
 })
-*/
+
 
 
 app.post('/create/:userName', withPrisma, async c => {

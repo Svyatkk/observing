@@ -34,6 +34,7 @@ export default function Profile() {
 
 
 
+
     if (isLoading) return <div>Завантаження...</div>
     if (!user) return <div>Користувача не знайдено</div>
 
