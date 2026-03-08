@@ -31,6 +31,7 @@ app.post('/register', withPrisma, async (c) => {
     try {
         const { userName, name, password } = await c.req.json()
 
+
         if (!userName || !name || !password) {
             return c.json({ error: "Всі поля є обов'язковими" }, 400)
         }
@@ -40,8 +41,6 @@ app.post('/register', withPrisma, async (c) => {
                 name: name,
                 userName: userName,
                 password: password,
-
-
             }
         })
         return c.json(newUser, 201)
@@ -53,6 +52,82 @@ app.post('/register', withPrisma, async (c) => {
     }
 })
 
+app.post('/comment', withPrisma, async c => {
+    const prisma = c.get("prisma")
+    try {
+        const body = await c.req.json()
+
+        const { postId, userId, content } = body
+
+
+        const comment = await prisma.comment.create({
+            data: {
+                userId: userId,
+                postId: postId,
+                content: content,
+            },
+        })
+        return c.json(comment, 201)
+
+    } catch (error) {
+        console.log(error)
+
+
+    }
+
+})
+
+
+
+app.get('/comments', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    const comments = await prisma.comment.findMany()
+
+    return c.json(comments)
+
+
+
+})
+
+app.get('/users', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    const users = await prisma.user.findMany()
+
+
+    return c.json(users)
+
+})
+
+
+/*
+app.get('/tweet/:id', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    const id = Number(c.req.param('id'))
+
+
+    try {
+        const commentForPost = await prisma.comment.findUnique({
+            where: {
+                postId: id,
+
+            }
+        })
+        const tweet = await prisma.post.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                comments: commentForPost
+            }
+        })
+    } catch (error) {
+        console.error(error)
+    }
+})
+*/
 
 
 app.post('/create/:userName', withPrisma, async c => {
@@ -96,6 +171,7 @@ app.post('/create/:userName', withPrisma, async c => {
 
 
 
+
 app.post('/login', withPrisma, async c => {
     const prisma = c.get('prisma')
     try {
@@ -109,6 +185,7 @@ app.post('/login', withPrisma, async c => {
         if (!user || user.password !== password) { // Згодом тут додамо bcrypt
             return c.json({ error: "Невірний логін або пароль" }, 401)
         }
+
         // МАГІЯ ТУТ: Створюємо JWT токен
         // Ми "зашиваємо" в токен ID юзера та його ім'я
         const token = jwt.sign(

@@ -10,9 +10,9 @@ export default async function Home() {
 
     console.log("Дані сесії на сервері:", user)
 
-
     return (
         <>
+
 
 
             <Main user={user}></Main>

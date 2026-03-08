@@ -5,6 +5,7 @@
     max-width: 300px;
     padding: 15px 10px 15px 10px;
 
+    position: relative;
     transition: 0.2s;
 
 }
@@ -38,4 +39,25 @@
     background-color: rgb(19, 19, 19);
     cursor: pointer;
     transition: 0.2s;
+}
+
+.blockComment {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+
+    border: 1px solid white;
+    height: 50px;
+    max-width: 200px;
+    width: 100%;
+}
+
+
+
+
+.input {
+    height: 100%;
+    padding: 10px;
+    background-color: black;
+
 }

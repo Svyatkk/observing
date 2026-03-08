@@ -11,9 +11,6 @@ export default function Register() {
 
     const route = useRouter()
 
-
-
-
     async function register() {
         try {
             const response = await fetch(`http://localhost:3001/register`, {
@@ -29,7 +26,6 @@ export default function Register() {
             })
 
 
-
             if (response.ok) {
                 const data = await response.json()
                 console.log("Успішна реєстрація:", data)
@@ -38,12 +34,13 @@ export default function Register() {
 
                 const errorData = await response.json()
                 console.error("Помилка реєстрації. Деталі від сервера:", errorData)
-                alert(`Помилка: ${errorData.error}`) // Виводимо помилку на екран, щоб одразу її бачити
+                alert(`Помилка: ${errorData.error}`)
             }
         } catch (error) {
             console.error("Мережева помилка:", error)
         }
     }
+
 
     return (
         <div>

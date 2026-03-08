@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import type { IUser } from '@/shared/types/user.interface'
 import { useParams } from 'next/navigation'
+import styles from './profile.module.css'
 
 export default function Profile() {
     const params = useParams()
@@ -11,6 +12,8 @@ export default function Profile() {
 
     useEffect(() => {
         if (!id) return
+
+
 
         fetch(`http://localhost:3001/profile/${id}`)
             .then(res => {
@@ -26,6 +29,7 @@ export default function Profile() {
                 setIsLoading(false)
             })
     }, [id])
+
 
 
     if (isLoading) return <div>Завантаження...</div>

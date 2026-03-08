@@ -8,6 +8,8 @@ import styles from './createtweet.module.css';
 export default function CreateTweet({ userName }: { userName: string }) {
     const [text, setText] = useState<string>("");
 
+
+
     const handlepost = async () => {
         if (!text.trim() || !userName) return;
 
@@ -31,13 +33,17 @@ export default function CreateTweet({ userName }: { userName: string }) {
 
     return (
         <div className={styles.container}>
-            <label>
+            <label className={styles.label}>
                 <input
-                    value={text} // Робимо інпут контрольованим
+                    className={styles.input}
+                    value={text}
                     onChange={(e) => setText(e.target.value)}
                     type="text"
+                    placeholder='Everyone can see'
                 />
-                <button onClick={handlepost}>click</button>
+
+
+                <button className={styles.but} onClick={handlepost}>click</button>
             </label>
         </div>
     )

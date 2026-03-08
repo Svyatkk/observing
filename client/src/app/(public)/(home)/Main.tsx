@@ -11,7 +11,6 @@ type Props = {
 
 }
 
-
 export default function Main({ user }: Props) {
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
@@ -20,14 +19,12 @@ export default function Main({ user }: Props) {
     useEffect(() => {
         const saveduser = localStorage.getItem('currentuser')
 
+
         fetch("http://localhost:3001/posts")
             .then(res => res.json())
             .then(data => {
                 setPosts(data)
                 setLoading(false)
-
-
-
             })
             .catch(err => console.error(err))
     }, [])
@@ -37,16 +34,13 @@ export default function Main({ user }: Props) {
     return (
         <>
 
-            <div>
+            <div className={styles.blockUser}>
                 {user ? String(user.userName) : "Гість"}
-
-
             </div>
-
 
             <main className={styles.main}>
                 {posts.map(post => (
-                    <Tweet key={post.id} object={post} />
+                    <Tweet key={post.id} userInSession={user} object={post} />
                 ))}
             </ main>
         </>
