@@ -14,20 +14,50 @@ type Props = {
 }
 
 
-
 export default function Tweet({ object, userInSession }: Props) {
     const [comment, setComment] = useState<string>("")
+    const [like, setLike] = useState<number>(0)
 
-
-    const handleComment = async () => {
-
+    const handleLIke = async () => {
         if (!userInSession) {
             alert("Будь ласка, увійдіть, щоб залишити коментар");
             return;
         }
 
 
+        try {
+            const response = await fetch(`http://localhost:3001/like/${object.id}/${userInSession.id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userid: userInSession.id,
+                    postId: object.id
+                })
 
+
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setLike(prev => prev + 1)
+                console.log("Лайк додано:", data);
+            }
+            else {
+                console.log("Помилка")
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    const handleComment = async () => {
+        if (!userInSession) {
+            alert("Будь ласка, увійдіть, щоб залишити коментар");
+            return;
+        }
         if (!comment.trim()) return;
 
         try {
@@ -57,6 +87,7 @@ export default function Tweet({ object, userInSession }: Props) {
     }
 
 
+
     return (
         <Link href={PAGES.TWEETDETAILS(object.id)} className={styles.block}>
             <div className={styles.blockHeader}>
@@ -77,7 +108,9 @@ export default function Tweet({ object, userInSession }: Props) {
             <div className={styles.blockContent}>
 
             </div>
-
+            <div onClick={handleLIke} className={styles.like}>
+                {like}
+            </div>
             <div className={styles.blockComment}>
                 <label className={styles.label} htmlFor=""><input type="text" onChange={(e) => {
                     setComment(e.target.value)

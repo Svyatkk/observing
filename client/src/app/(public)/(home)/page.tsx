@@ -14,7 +14,6 @@ export default async function Home() {
         <>
 
 
-
             <Main user={user}></Main>
         </>
     )

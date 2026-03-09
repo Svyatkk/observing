@@ -36,6 +36,7 @@ app.post('/register', withPrisma, async (c) => {
             return c.json({ error: "Всі поля є обов'язковими" }, 400)
         }
 
+
         const newUser = await prisma.user.create({
             data: {
                 name: name,
@@ -90,6 +91,18 @@ app.get('/comments', withPrisma, async c => {
 
 })
 
+app.get('/likes', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    const likes = await prisma.like.findMany()
+
+    return c.json(likes)
+
+
+
+
+})
+
 app.get('/users', withPrisma, async c => {
     const prisma = c.get("prisma")
 
@@ -100,7 +113,27 @@ app.get('/users', withPrisma, async c => {
 
 })
 
+app.post('/like/:postid/:userid', withPrisma, async c => {
+    const prisma = c.get("prisma")
+    const postid = Number(c.req.param('postid'))
+    const userid = Number(c.req.param('userid'))
 
+    try {
+
+        const like = await prisma.like.create({
+            data: {
+                postId: postid,
+                userId: userid,
+            }
+        })
+        return c.json(like, 201)
+
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
 
 app.get('/tweet-details/:id', withPrisma, async c => {
     const prisma = c.get("prisma")
@@ -133,6 +166,7 @@ app.get('/tweet-details/:id', withPrisma, async c => {
 
     }
 })
+
 
 
 
@@ -219,18 +253,19 @@ app.get('/posts', withPrisma, async c => {
     const posts = await prisma.post.findMany({
         include: {
             user: true,
-            comments: true
+            comments: true,
+            _count: {
+                select: { likes: true }
+            }
         },
         orderBy: {
             id: 'desc'
         },
     })
-
-
-
     return c.json(posts)
-
 })
+
+
 
 app.get('/:userName', withPrisma, async (c) => {
 
