@@ -126,8 +126,19 @@ app.post('/like/:postid/:userid', withPrisma, async c => {
                 userId: userid,
             }
         })
-        return c.json(like, 201)
 
+        const getallLikes = await prisma.like.findMany({
+            where: {
+                postId: postid
+            },
+            include: {
+                user: true
+            }
+        })
+
+
+
+        return c.json(allPostLikes, 201)
 
     } catch (error) {
         console.log(error)
@@ -149,15 +160,19 @@ app.get('/tweet-details/:id', withPrisma, async c => {
 
             include: {
                 user: true,
+                likes: {
+                    include: { user: true }
+                },
                 comments: {
-                    include: {
-                        user: true
-                    }
-                }
-
-
+                    include: { user: true }
+                },
+                _count: {
+                    select: { likes: true }
+                },
             }
         })
+
+
         return c.json(tweet)
     } catch (error) {
         console.error(error)
@@ -183,6 +198,7 @@ app.post('/create/:userName', withPrisma, async c => {
                 userName: user
             }
         })
+
         if (!currentUser) {
             return c.json({ error: "Користувача не знайдено" }, 404);
         }
@@ -194,23 +210,13 @@ app.post('/create/:userName', withPrisma, async c => {
 
             }
         })
-
-
         return c.json(tweet)
-
 
     } catch (error) {
         console.log(error)
-
         return c.json({ message: 'шось пішло не так' })
-
-
     }
-
 })
-
-
-
 
 app.post('/login', withPrisma, async c => {
     const prisma = c.get('prisma')
@@ -236,16 +242,14 @@ app.post('/login', withPrisma, async c => {
             JWT_SECRET,
             { expiresIn: '7d' } // Токен діє 7 днів
         );
-        // Повертаємо токен на Next.js
+
+
         return c.json({ message: "Успіх", token: token })
 
     } catch (error) {
         return c.json({ error: "Помилка сервера" }, 500)
     }
 })
-
-
-
 
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')
@@ -254,6 +258,9 @@ app.get('/posts', withPrisma, async c => {
         include: {
             user: true,
             comments: true,
+            likes: {
+                include: { user: true }
+            },
             _count: {
                 select: { likes: true }
             }
@@ -264,9 +271,6 @@ app.get('/posts', withPrisma, async c => {
     })
     return c.json(posts)
 })
-
-
-
 app.get('/:userName', withPrisma, async (c) => {
 
     const prisma = c.get('prisma')
@@ -326,3 +330,4 @@ serve(
         console.log('Server is running in port' + info.port)
     }
 )
+

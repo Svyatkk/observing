@@ -20,6 +20,8 @@ export default function TweetDetails({ userSession }: { userSession: JWTPayload 
             .catch(err => console.log(err))
     }, [id])
 
+
+
     return (
         <div className={styles.container}>
             {post && (

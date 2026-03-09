@@ -67,9 +67,52 @@
     width: 20px;
     border: 1px solid white;
     border-radius: 50%;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .like:hover {
     background-color: red;
+
+}
+
+.blockLikes {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    border: 1px solid yellow;
+    align-items: center;
+}
+
+.blockLikes p:hover {
+    text-decoration: underline;
+}
+
+
+.blockTextLikes {
+    border: 1px solid red;
+    position: relative;
+
+}
+
+.blockShowLIkes {
+    position: absolute;
+    height: auto;
+    width: 500px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    background-color: white(22, 22, 22);
+    z-index: -1000;
+    opacity: 0;
+
+}
+
+.blockShowLIkes.active {
+    opacity: 1;
+    z-index: 3000;
+
+
+
 }
