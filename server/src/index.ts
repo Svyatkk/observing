@@ -138,7 +138,7 @@ app.post('/like/:postid/:userid', withPrisma, async c => {
 
 
 
-        return c.json(allPostLikes, 201)
+        return c.json(getallLikes, 201)
 
     } catch (error) {
         console.log(error)
@@ -202,6 +202,7 @@ app.post('/create/:userName', withPrisma, async c => {
         if (!currentUser) {
             return c.json({ error: "Користувача не знайдено" }, 404);
         }
+
         const tweet = await prisma.post.create({
             data: {
                 title: text,
@@ -250,6 +251,29 @@ app.post('/login', withPrisma, async c => {
         return c.json({ error: "Помилка сервера" }, 500)
     }
 })
+
+app.delete('/deletelike/:postid/:userinsessionid', withPrisma, async c => {
+    const prisma = c.get('prisma')
+
+    const postid = Number(c.req.param('postid'))
+    const userinsessionid = Number(c.req.param('userinsessionid'))
+
+    try {
+        const like = await prisma.like.deleteMany({
+            where: {
+                postId: postid,
+                userId: userinsessionid
+            },
+        })
+
+        return c.json(like)
+
+    } catch (error) {
+        console.log(error)
+        return c.json({ error: "Щось пішло не так" }, 500)
+    }
+})
+
 
 app.get('/posts', withPrisma, async c => {
     const prisma = c.get('prisma')

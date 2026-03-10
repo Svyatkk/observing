@@ -9,6 +9,7 @@ import type { JWTPayload } from "jose"
 import { useState } from "react"
 import { useRef } from "react"
 import type { ILike } from "@/shared/types/like.interface"
+import { data } from "react-router-dom"
 type Props = {
     object: Post,
     userInSession: JWTPayload | null
@@ -20,6 +21,7 @@ export default function Tweet({ object, userInSession }: Props) {
     const [like, setLike] = useState<number>(object._count?.likes || 0)
     const [wholikes, setWholikes] = useState<ILike[]>(object.likes || [])
     const [active, setActive] = useState(false)
+    const [liked, setLiked] = useState(false)
 
 
     const handleLIke = async () => {
@@ -28,28 +30,59 @@ export default function Tweet({ object, userInSession }: Props) {
             return;
         }
 
+
         try {
-            const response = await fetch(`http://localhost:3001/like/${object.id}/${userInSession.id}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    userid: userInSession.id,
-                    postId: object.id
+
+            if (!liked) {
+
+
+                const response = await fetch(`http://localhost:3001/like/${object.id}/${userInSession.id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userid: userInSession.id,
+                        postId: object.id,
+
+                    })
+
+
                 })
+                if (response.ok) {
+                    const data = await response.json()
+                    setLiked(true)
+                    setLike(prev => prev + 1)
+                    setWholikes(data)
 
 
-            })
-            if (response.ok) {
-                const data = await response.json()
-                setLike(prev => prev + 1)
-                setWholikes(data)
-                console.log(data)
-                console.log("Лайк додано:", data);
+
+                    console.log(data)
+                    console.log("Лайк додано:", data);
+                }
             }
             else {
-                console.log("Помилка")
+
+                const response = await fetch(`http://localhost:3001/deletelike/${object.id}/${userInSession.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userid: userInSession.id,
+                        postId: object.id,
+
+                    })
+
+
+                })
+                if (response.ok) {
+                    setLiked(false)
+                    setLike(prev => prev - 1)
+
+
+
+                }
             }
 
 
@@ -92,7 +125,6 @@ export default function Tweet({ object, userInSession }: Props) {
     }
 
 
-
     return (
         <Link href={PAGES.TWEETDETAILS(object.id)} className={styles.block}>
             <div className={styles.blockHeader}>
@@ -114,10 +146,11 @@ export default function Tweet({ object, userInSession }: Props) {
 
             </div>
             <div className={styles.blockLikes}>
-                <div onClick={handleLIke} className={styles.like}>
+                <div onClick={handleLIke} className={`${styles.like}${liked ? 'liked' : ''}`}>
                     <span>{like}</span>
 
                 </div>
+
 
                 <div className={styles.blockTextLikes}>
                     <p onMouseEnter={() => {
@@ -133,15 +166,11 @@ export default function Tweet({ object, userInSession }: Props) {
                     </p>
                     <div onMouseEnter={() => {
                         setActive(true)
-
-
-
                     }}
                         onMouseLeave={() => {
                             setActive(false)
-
                         }}
-                        className={`${styles.blockShowLIkes}${active ? 'active' : ''}`}>
+                        className={`${styles.blockShowLIkes}${like ? 'active' : ''}`}>
                         {wholikes?.map((like, index) => {
                             return <div key={index}>
 
@@ -154,6 +183,7 @@ export default function Tweet({ object, userInSession }: Props) {
                 </div>
             </div>
 
+
             <div className={styles.blockComment}>
                 <label className={styles.label} htmlFor=""><input type="text" onChange={(e) => {
                     setComment(e.target.value)
@@ -162,6 +192,9 @@ export default function Tweet({ object, userInSession }: Props) {
                     handleComment
                 }>Comment</button>
             </div>
+
+
+
         </Link >
     )
 }
