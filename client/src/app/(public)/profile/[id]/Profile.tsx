@@ -14,42 +14,61 @@ export default function Profile({ userSession }: Props) {
     const id = params?.id
     const [user, setUser] = useState<IUser | null>(null)
     const [isLoading, setIsLoading] = useState(true)
-
-
     const [count, setCount] = useState<number>(0)
 
     const [subscribe, setSubscribe] = useState(false)
 
+
     const handleSub = async () => {
 
         try {
-            if (!userSession || !userSession.id || !user) {
-                alert("Будь ласка, увійдіть в акаунт");
-                return;
+
+            if (!subscribe) {
+                if (!userSession || !userSession.id || !user) {
+                    alert("Будь ласка, увійдіть в акаунт");
+                    return;
+                }
+                const response = await fetch(`http://localhost:3001/subscribe`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ useridfollower: userSession.id, useridfollowing: user?.id })
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    setSubscribe(prev => !prev)
+                    setCount(prev => prev + 1)
+                }
             }
-            const response = await fetch(`http://localhost:3001/subscribe`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ useridfollower: userSession.id, useridfollowing: user?.id })
-            })
+
+            else {
+                if (!userSession || !userSession.id || !user) {
+                    alert("Будь ласка, увійдіть в акаунт");
+                    return;
+                }
+                const response = await fetch(`http://localhost:3001/unsub`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ useridfollower: userSession.id, useridfollowing: user?.id })
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    setSubscribe(prev => !prev)
+                    setCount(prev => prev + 1)
 
 
-            if (response.ok) {
-                const data = await response.json()
-                setSubscribe(true)
 
+                }
             }
+
         } catch (error) {
 
             console.log(error)
         }
-
-
     }
-
-
     useEffect(() => {
         if (!id) return
 
@@ -67,7 +86,7 @@ export default function Profile({ userSession }: Props) {
                 console.error("Fetch error:", err)
                 setIsLoading(false)
             })
-    }, [id])
+    }, [id, userSession?.id])
 
 
     if (isLoading) return <div>Завантаження...</div>
@@ -78,7 +97,7 @@ export default function Profile({ userSession }: Props) {
         <div className={styles.profile}>
             <h1>{user.name}</h1>
             <div className={styles.subscribe}>
-                <button className={`${styles.butsub}${subscribe ? 'active' : ''}`} onClick={handleSub}>Subscribe</button>
+                <button className={`${styles.butsub}${subscribe ? styles.active : ''}`} onClick={handleSub}>{subscribe ? <p>UnSubscribe</p> : <p>Subscribe</p>}</button>
 
                 <div className={styles.followersAmount}>
                     {count}

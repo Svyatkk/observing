@@ -124,17 +124,21 @@ export default function Tweet({ object, userInSession }: Props) {
         }
     }
 
-
     return (
         <Link href={PAGES.TWEETDETAILS(object.id)} className={styles.block}>
             <div className={styles.blockHeader}>
-                <Image
-                    alt={object.user.name}
-                    src={""}
-                    height={40}
-                    width={40}
-                    className={styles.img}
-                />
+                <Link href={PAGES.PROFILE(object.user.id)}>
+                    <Image
+                        alt={object.user.name}
+                        src={""}
+                        height={40}
+                        width={40}
+                        className={styles.img}
+                    />
+                </Link>
+
+
+
                 <div className={styles.textHeader}>
                     <div className={styles.name}>{object.user.name}</div>
                     <div className={styles.header}>
@@ -148,6 +152,7 @@ export default function Tweet({ object, userInSession }: Props) {
             <div className={styles.blockLikes}>
                 <div onClick={handleLIke} className={`${styles.like}${liked ? 'liked' : ''}`}>
                     <span>{like}</span>
+
 
                 </div>
 

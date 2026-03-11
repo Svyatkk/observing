@@ -53,6 +53,31 @@ app.post('/register', withPrisma, async (c) => {
     }
 })
 
+app.delete('/unsub', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    try {
+        const body = await c.req.json()
+        const { useridfollowing, useridfollower } = body
+
+        const follow = await prisma.follow.deleteMany({
+            where: {
+
+                followerId: useridfollower,
+                followingId: useridfollowing
+            }
+
+        })
+        return c.json(follow)
+
+
+    } catch (error) {
+        console.error(error)
+    }
+
+
+})
+
 app.post('/comment', withPrisma, async c => {
     const prisma = c.get("prisma")
     try {
@@ -79,7 +104,6 @@ app.post('/comment', withPrisma, async c => {
 })
 
 
-
 app.get('/comments', withPrisma, async c => {
     const prisma = c.get("prisma")
 
@@ -97,11 +121,27 @@ app.get('/likes', withPrisma, async c => {
     const likes = await prisma.like.findMany()
 
     return c.json(likes)
-
-
-
-
 })
+
+
+
+app.get('/followers/:useid', withPrisma, async c => {
+    const prisma = c.get("prisma")
+
+    const userid = Number(c.req.param('useid'))
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userid
+        },
+        include: {
+            followers: true
+        }
+    })
+
+    return c.json(user, 201)
+})
+
 
 app.get('/users', withPrisma, async c => {
     const prisma = c.get("prisma")
@@ -329,21 +369,31 @@ app.post('/subscribe', withPrisma, async c => {
     }
 
     try {
+        const existingFollow = await prisma.follow.findFirst({
+            where: {
+                followerId: useridfollower,
+                followingId: useridfollowing
+            }
+
+
+        })
+        if (existingFollow) {
+            return c.json({ message: "Вже підписані" }, 200);
+        }
+
+
         const follow = await prisma.follow.create({
             data: {
                 followerId: useridfollower,
                 followingId: useridfollowing,
             }
         })
+        return c.json(follow)
+
     } catch (error) {
         console.log(error)
         return c.json({ error: "Помилка при підписці (можливо, ви вже підписані)" }, 500)
     }
-
-
-    return c.json(follow)
-
-
 
 })
 
@@ -361,6 +411,7 @@ app.get('/profile/:id', withPrisma, async (c) => {
         include: {
             comments: true,
             following: true,
+            followers: true,
             _count: {
                 select: {
                     followers: true
