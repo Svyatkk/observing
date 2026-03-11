@@ -14,13 +14,19 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String
-  userName String    @unique
-  password String
-  posts    Post[]
-  likes    Like[]
-  comments Comment[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  userName  String    @unique
+  password  String
+  posts     Post[]
+  likes     Like[]
+  comments  Comment[]
+  // Ті, на кого ПІДПИСАНИЙ цей користувач
+  following Follow[]  @relation("UserFollowing")
+
+  // Ті, хто ПІДПИСАНИЙ на цього користувача
+  followers Follow[] @relation("UserFollowers")
+  follows   Follow[]
 }
 
 model Post {
@@ -53,4 +59,21 @@ model Comment {
 
   postId Int  @map("post_id")
   post   Post @relation(fields: [postId], references: [id])
+}
+
+model Follow {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  // Хто підписався
+  followerId Int
+  follower   User @relation("UserFollowing", fields: [followerId], references: [id])
+
+  // На кого підписався
+  followingId Int
+  following   User  @relation("UserFollowers", fields: [followingId], references: [id])
+  user        User? @relation(fields: [userId], references: [id])
+  userId      Int?
+
+  @@unique([followerId, followingId])
 }

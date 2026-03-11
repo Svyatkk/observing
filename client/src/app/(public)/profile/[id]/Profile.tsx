@@ -4,13 +4,51 @@ import type { IUser } from '@/shared/types/user.interface'
 import { useParams } from 'next/navigation'
 import styles from './profile.module.css'
 import type { IComment } from '@/shared/types/comment.interface'
-export default function Profile() {
+import type { JWTPayload } from 'jose'
+type Props = {
+    userSession: JWTPayload | null
+}
+
+export default function Profile({ userSession }: Props) {
     const params = useParams()
     const id = params?.id
     const [user, setUser] = useState<IUser | null>(null)
-    const [comments, setComments] = useState<string>("")
-
     const [isLoading, setIsLoading] = useState(true)
+
+
+    const [count, setCount] = useState<number>(0)
+
+    const [subscribe, setSubscribe] = useState(false)
+
+    const handleSub = async () => {
+
+        try {
+            if (!userSession || !userSession.id || !user) {
+                alert("Будь ласка, увійдіть в акаунт");
+                return;
+            }
+            const response = await fetch(`http://localhost:3001/subscribe`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ useridfollower: userSession.id, useridfollowing: user?.id })
+            })
+
+
+            if (response.ok) {
+                const data = await response.json()
+                setSubscribe(true)
+
+            }
+        } catch (error) {
+
+            console.log(error)
+        }
+
+
+    }
+
 
     useEffect(() => {
         if (!id) return
@@ -22,7 +60,7 @@ export default function Profile() {
             })
             .then(data => {
                 setUser(data)
-
+                setCount(data._count?.followers || 0)
                 setIsLoading(false)
             })
             .catch(err => {
@@ -31,12 +69,23 @@ export default function Profile() {
             })
     }, [id])
 
+
     if (isLoading) return <div>Завантаження...</div>
     if (!user) return <div>Користувача не знайдено</div>
+
 
     return (
         <div className={styles.profile}>
             <h1>{user.name}</h1>
+            <div className={styles.subscribe}>
+                <button className={`${styles.butsub}${subscribe ? 'active' : ''}`} onClick={handleSub}>Subscribe</button>
+
+                <div className={styles.followersAmount}>
+                    {count}
+
+
+                </div>
+            </div>
 
             <div className={styles.comments}>
                 <h2>Коментарі користувача:</h2>
@@ -50,7 +99,7 @@ export default function Profile() {
                     <p>Коментарів ще немає.</p>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 

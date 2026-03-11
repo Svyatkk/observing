@@ -107,11 +107,12 @@ app.get('/users', withPrisma, async c => {
     const prisma = c.get("prisma")
 
     const users = await prisma.user.findMany()
-
-
     return c.json(users)
 
 })
+
+
+
 
 app.post('/like/:postid/:userid', withPrisma, async c => {
     const prisma = c.get("prisma")
@@ -232,16 +233,13 @@ app.post('/login', withPrisma, async c => {
         if (!user || user.password !== password) { // Згодом тут додамо bcrypt
             return c.json({ error: "Невірний логін або пароль" }, 401)
         }
-
-        // МАГІЯ ТУТ: Створюємо JWT токен
-        // Ми "зашиваємо" в токен ID юзера та його ім'я
         const token = jwt.sign(
             {
                 id: user.id,
                 userName: user.userName
             },
             JWT_SECRET,
-            { expiresIn: '7d' } // Токен діє 7 днів
+            { expiresIn: '7d' }
         );
 
 
@@ -320,6 +318,35 @@ app.get('/:userName', withPrisma, async (c) => {
     }
 })
 
+app.post('/subscribe', withPrisma, async c => {
+    const prisma = c.get('prisma')
+    const body = await c.req.json()
+
+    const { useridfollowing, useridfollower } = body
+
+    if (useridfollowing === useridfollower) {
+        return c.json({ error: "Не можна підписатися на самого себе" }, 400)
+    }
+
+    try {
+        const follow = await prisma.follow.create({
+            data: {
+                followerId: useridfollower,
+                followingId: useridfollowing,
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        return c.json({ error: "Помилка при підписці (можливо, ви вже підписані)" }, 500)
+    }
+
+
+    return c.json(follow)
+
+
+
+})
+
 app.get('/profile/:id', withPrisma, async (c) => {
     const rawId = c.req.param('id');
     console.log("Отримано запит для ID:", rawId);
@@ -332,7 +359,14 @@ app.get('/profile/:id', withPrisma, async (c) => {
     const user = await prisma.user.findUnique({
         where: { id: id },
         include: {
-            comments: true
+            comments: true,
+            following: true,
+            _count: {
+                select: {
+                    followers: true
+                }
+            }
+
         }
     });
 
